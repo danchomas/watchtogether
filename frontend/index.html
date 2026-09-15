@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watchroom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a href="index.html" class="logo">
+        <span class="logo-mark"></span>
+        Watchroom
+      </a>
+      <div class="header-actions">
+        <a href="auth.html" class="header-link">Войти</a>
+        <a href="auth.html" class="btn btn-primary">Начать сеанс</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="timecode">
+          <span class="dot"></span>
+          00:42:17 — синхронно у всех участников
+        </div>
+        <h1>Разные устройства,<br>Одно время</h1>
+        <p class="hero-lede">
+          Watchroom синхронизирует воспроизведение видео между всеми, кто в комнате —
+          пауза, перемотка и звук совпадают у каждого зрителя с точностью до кадра.
+          Рядом — чат, чтобы обсуждать происходящее в реальном времени.
+        </p>
+        <div class="hero-actions">
+          <a href="auth.html" class="btn btn-primary">Создать комнату</a>
+          <a href="watch.html" class="btn btn-ghost">Посмотреть демо</a>
+        </div>
+        <p class="hero-note">Комната открывается по короткому коду, например <code>AX7F92</code></p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-screen">
+          <div class="hero-screen-bars">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="hero-screen-frame"></div>
+        </div>
+        <div class="hero-viewers">
+          <div class="avatar-stack">
+            <span class="a1"></span><span class="a2"></span><span class="a3"></span>
+          </div>
+          3 зрителя смотрят прямо сейчас
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps">
+    <div class="wrap">
+      <div class="steps-head">
+        <h2>Как начать смотреть вместе</h2>
+        <p>От пустой страницы до общего просмотра — три шага, без регистрации гостей.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Создайте комнату</h3>
+          <p>Вставьте ссылку на видео или загрузите файл — Watchroom подготовит плеер и сгенерирует код комнаты.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Пригласите друзей</h3>
+          <p>Отправьте код или ссылку. Гости присоединяются мгновенно, без установки и регистрации.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Смотрите синхронно</h3>
+          <p>Пауза и перемотка одного участника применяются у всех. Рядом — чат для реплик по ходу просмотра.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="wrap">
+      <div class="features-grid">
+        <div class="feature feature-lg">
+          <div>
+            <div class="feature-tag">ядро сервиса</div>
+            <h3>Плеер, синхронный с точностью до кадра</h3>
+            <p>
+              Если кто-то ставит видео на паузу — вся комната ждёт вместе с ним.
+              Автоматическая пересинхронизация решает задержки сети сама.
+            </p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">общение</div>
+          <h3>Чат рядом с видео</h3>
+          <p>Реакции и реплики не перекрывают экран и не теряются в перемотке.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">источники</div>
+          <h3>Ссылка, файл или трансляция</h3>
+          <p>Работает с прямыми ссылками на видео, загруженными файлами и потоковыми источниками.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav>
+        <a href="index.html">Главная</a>
+        <a href="watch.html">Комната</a>
+        <a href="auth.html">Вход</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>
