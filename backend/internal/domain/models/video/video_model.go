@@ -8,4 +8,5 @@ type Video struct {
 	Source   SourceType
 	Url      string
 	Duration time.Duration
+	RoomId   string
 }
