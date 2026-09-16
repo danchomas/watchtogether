@@ -1,12 +1,16 @@
 package room
 
-import "time"
+import (
+	"time"
+	"watchroom/internal/domain/models/video"
+)
 
 type Room struct {
 	Id           string
-	Tittle       string
+	Title        string
 	Code         string
 	Visibility   Visibility
 	PasswordHash string
 	CreatedAt    time.Time
+	Video        video.Video
 }
