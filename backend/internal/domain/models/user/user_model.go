@@ -12,5 +12,5 @@ type User struct {
 }
 
 func (u User) IsGuest() bool {
-	return u.PasswordHash != ""
+	return u.PasswordHash == ""
 }

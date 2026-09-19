@@ -5,7 +5,7 @@ type Visibility string
 const (
 	VisibilityPublic      Visibility = "public"
 	VisibilityFriendsOnly Visibility = "frinends_only"
-	VisibilityPrivate     Visibility = "Private"
+	VisibilityPrivate     Visibility = "private"
 )
 
 func (v Visibility) isValid() bool {
