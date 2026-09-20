@@ -1,4 +1,6 @@
-CREATE TABLE videos (
+CREATE SCHEMA watchtogether;
+
+CREATE TABLE watchtogether.videos (
     id         UUID PRIMARY KEY DEFAULT uuidv7(),
     title      TEXT NOT NULL,
     source     TEXT NOT NULL,
@@ -6,7 +8,7 @@ CREATE TABLE videos (
     duration   BIGINT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE users (
+CREATE TABLE watchtogether.users (
     id              UUID PRIMARY KEY DEFAULT uuidv7(),
     nickname        TEXT NOT NULL,
     password_hash   TEXT NOT NULL,
@@ -15,12 +17,12 @@ CREATE TABLE users (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE rooms (
+CREATE TABLE watchtogether.rooms (
     id              TEXT PRIMARY KEY,
     title           TEXT NOT NULL,
-    host_id         UUID NOT NULL REFERENCES users(id),
+    host_id         UUID NOT NULL REFERENCES watchtogether.users(id),
     visibility      TEXT NOT NULL DEFAULT 'public',
     password_hash   TEXT NOT NULL DEFAULT '',
-    video_id        UUID REFERENCES videos(id),
+    video_id        UUID REFERENCES watchtogether.videos(id),
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
