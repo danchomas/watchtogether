@@ -9,3 +9,8 @@ services:
     volumes:
       - ${PROJECT_ROOT}/out/pgdata:/var/lib/postgresql
     restart: always
+
+  migrate:
+    image: migrate/migrate:v4.20.1
+    volumes:
+      - ${PROJECT_ROOT}/migrations:/migrations
