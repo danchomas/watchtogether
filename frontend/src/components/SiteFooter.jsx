@@ -6,8 +6,6 @@ export default function SiteFooter() {
       <div className="wrap">
         <nav>
           <Link to="/">Главная</Link>
-          <Link to="/watch">Комната</Link>
-          <Link to="/auth">Вход</Link>
         </nav>
       </div>
     </footer>

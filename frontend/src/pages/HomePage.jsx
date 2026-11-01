@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../api.js";
 import SiteHeader from "../components/SiteHeader.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
 import AvatarStack from "../components/AvatarStack.jsx";
@@ -9,7 +11,7 @@ const steps = [
   {
     num: "01",
     title: "Создайте комнату",
-    text: "Вставьте ссылку на видео или загрузите файл — Watchroom подготовит плеер и сгенерирует код комнаты.",
+    text: "Вставьте прямую ссылку на видео — Watchroom подготовит плеер и сгенерирует код комнаты.",
   },
   {
     num: "02",
@@ -26,8 +28,8 @@ const steps = [
 const features = [
   {
     tag: "ядро сервиса",
-    title: "Плеер, синхронный с точностью до кадра",
-    text: "Если кто-то ставит видео на паузу - вся комната ждёт вместе с ним. Автоматическая пересинхронизация решает задержки сети сама.",
+    title: "Общее управление просмотром",
+    text: "Пауза и перемотка одного зрителя применяются у всех. Плеер периодически корректирует расхождения из-за задержек сети.",
     large: true,
   },
   {
@@ -37,12 +39,34 @@ const features = [
   },
   {
     tag: "источники",
-    title: "Ссылка, файл или трансляция",
-    text: "Работает с прямыми ссылками на видео, загруженными файлами и потоковыми источниками.",
+    title: "Прямые ссылки на видео",
+    text: "Укажите общедоступный видеофайл, который открывается в браузере каждого участника.",
   },
 ];
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  const [mode, setMode] = useState("create");
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function submit(event) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const result = mode === "create"
+        ? await api("/rooms", { method: "POST", body: JSON.stringify({ name, title, videoUrl }) })
+        : await api(`/rooms/${encodeURIComponent(code.trim().toUpperCase())}/join`, { method: "POST", body: JSON.stringify({ name }) });
+      sessionStorage.setItem(`room:${result.room.code}`, JSON.stringify({ token: result.token, name: name.trim() }));
+      navigate(`/watch/${result.room.code}`);
+    } catch (err) { setError(err.message); }
+    finally { setBusy(false); }
+  }
   return (
     <>
       <SiteHeader />
@@ -52,7 +76,7 @@ export default function HomePage() {
           <div>
             <div className="timecode">
               <span className="dot"></span>
-              00:42:17 — синхронно у всех участников
+              00:42:17 — смотрим вместе
             </div>
             <h1>
               Разные устройства,
@@ -61,17 +85,26 @@ export default function HomePage() {
             </h1>
             <p className="hero-lede">
               Watchroom синхронизирует воспроизведение видео между всеми, кто в
-              комнате — пауза, перемотка и звук совпадают у каждого зрителя с
-              точностью до кадра. Рядом — чат, чтобы обсуждать происходящее в
+              комнате — пауза и перемотка общие для всех зрителей.
+              Рядом — чат, чтобы обсуждать происходящее в
               реальном времени.
             </p>
             <div className="hero-actions">
-              <Link to="/auth" className="btn btn-primary">Создать комнату</Link>
-              <Link to="/watch" className="btn btn-ghost">Посмотреть демо</Link>
+              <button type="button" className={`btn ${mode === "create" ? "btn-primary" : "btn-ghost"}`} onClick={() => setMode("create")}>Создать комнату</button>
+              <button type="button" className={`btn ${mode === "join" ? "btn-primary" : "btn-ghost"}`} onClick={() => setMode("join")}>Войти по коду</button>
             </div>
+            <form id="start" className="room-form" onSubmit={submit}>
+              <label>Ваше имя<input required maxLength={40} value={name} onChange={(e) => setName(e.target.value)} placeholder="Как к вам обращаться" /></label>
+              {mode === "create" ? <>
+                <label>Название комнаты<input required maxLength={100} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Пятничный киновечер" /></label>
+                <label>Прямая ссылка на видео<input required type="url" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://example.com/movie.mp4" /></label>
+              </> : <label>Код комнаты<input required value={code} onChange={(e) => setCode(e.target.value)} placeholder="AX7F92" /></label>}
+              {error && <p className="form-error" role="alert">{error}</p>}
+              <button className="btn btn-primary" disabled={busy}>{busy ? "Подождите…" : mode === "create" ? "Начать просмотр" : "Присоединиться"}</button>
+              {mode === "create" && <p className="hero-note">Поддерживаются прямые ссылки на видео, доступные браузеру (например MP4). Ссылки на страницы видеохостингов не воспроизводятся.</p>}
+            </form>
             <p className="hero-note">
-              Комната открывается по короткому коду, например{" "}
-              <code>AX7F92</code>
+              Комната открывается по коду или ссылке-приглашению.
             </p>
           </div>
 

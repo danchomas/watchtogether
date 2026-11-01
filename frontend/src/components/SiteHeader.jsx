@@ -9,8 +9,7 @@ export default function SiteHeader() {
           Watchroom
         </Link>
         <div className="header-actions">
-          <Link to="/auth" className="header-link">Войти</Link>
-          <Link to="/auth" className="btn btn-primary">Начать сеанс</Link>
+          <a href="/#start" className="btn btn-primary">Начать сеанс</a>
         </div>
       </div>
     </header>

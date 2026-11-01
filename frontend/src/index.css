@@ -635,6 +635,8 @@ button, input {
 
 .chat-messages {
   flex: 1;
+  min-height: 200px;
+  max-height: calc(100vh - 180px);
   padding: 22px 24px;
   display: flex;
   flex-direction: column;
@@ -919,3 +921,15 @@ button, input {
     animation: none;
   }
 }
+
+.room-form { display: grid; gap: 14px; max-width: 480px; margin-bottom: 22px; }
+.room-form label { display: grid; gap: 6px; font-size: 14px; }
+.room-form input { width: 100%; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-s); background: var(--bg-panel); }
+.room-form .btn { justify-content: center; }
+.room-form .hero-note { line-height: 1.5; }
+.form-error { color: #f28b82; font-size: 14px; }
+.room-notice { margin: 12vh auto; padding: 24px; max-width: 480px; }
+.connection-banner { padding: 8px 32px; background: #554827; color: #fff; }
+.video-element { display: block; width: 100%; aspect-ratio: 16 / 9; background: var(--bg-deep); border-radius: var(--radius-m); }
+button.room-code { cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
