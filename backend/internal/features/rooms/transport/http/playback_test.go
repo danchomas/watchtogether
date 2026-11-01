@@ -63,4 +63,10 @@ func TestEventStream(t *testing.T) {
 	if next := readState(); next.Snapshot.Playback.Position != 20 || !next.Snapshot.Playback.Playing {
 		t.Fatalf("unexpected playback: %+v", next)
 	}
+	if err := s.SendMessage(room.Code, token, "Привет"); err != nil {
+		t.Fatal(err)
+	}
+	if next := readState(); len(next.Snapshot.Messages) != 1 || next.Snapshot.Messages[0].Text != "Привет" {
+		t.Fatalf("unexpected chat state: %+v", next)
+	}
 }

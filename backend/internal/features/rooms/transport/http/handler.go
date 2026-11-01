@@ -16,6 +16,7 @@ type Rooms interface {
 	Get(code, token string) (model.Snapshot, error)
 	Subscribe(code, token string) (<-chan model.Event, func(), error)
 	UpdatePlayback(code, token string, position float64, playing bool) error
+	SendMessage(code, token, text string) error
 }
 
 type Handler struct{ rooms Rooms }
@@ -28,6 +29,7 @@ func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/rooms/{code}", h.get)
 	mux.HandleFunc("GET /api/rooms/{code}/events", h.events)
 	mux.HandleFunc("POST /api/rooms/{code}/playback", h.playback)
+	mux.HandleFunc("POST /api/rooms/{code}/messages", h.message)
 }
 
 func write(w http.ResponseWriter, status int, value any) {

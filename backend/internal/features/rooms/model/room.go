@@ -10,11 +10,12 @@ var (
 )
 
 type Snapshot struct {
-	Code         string   `json:"code"`
-	Title        string   `json:"title"`
-	VideoURL     string   `json:"videoUrl"`
-	Participants int      `json:"participants"`
-	Playback     Playback `json:"playback"`
+	Code         string    `json:"code"`
+	Title        string    `json:"title"`
+	VideoURL     string    `json:"videoUrl"`
+	Participants int       `json:"participants"`
+	Playback     Playback  `json:"playback"`
+	Messages     []Message `json:"messages"`
 }
 
 type Room struct {
@@ -27,6 +28,10 @@ func (r Room) Clone() Room {
 	copy.Members = make(map[string]string, len(r.Members))
 	for token, name := range r.Members {
 		copy.Members[token] = name
+	}
+	copy.State.Messages = make([]Message, len(r.State.Messages))
+	for i, message := range r.State.Messages {
+		copy.State.Messages[i] = message
 	}
 	return copy
 }

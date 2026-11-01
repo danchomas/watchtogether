@@ -58,6 +58,7 @@ func (s *Service) Create(title, videoURL, name string) (model.Snapshot, string, 
 		}
 		room := model.Room{State: model.Snapshot{Code: normalizeCode(code), Title: title, VideoURL: videoURL, Participants: 1}, Members: map[string]string{token: name}}
 		room.State.Playback = model.Playback{UpdatedAt: time.Now().UTC()}
+		room.State.Messages = []model.Message{}
 		err = s.rooms.Insert(room)
 		if errors.Is(err, model.ErrConflict) {
 			continue
