@@ -2,24 +2,39 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, roomSession } from "../api.js";
 import RoomHeader from "../components/RoomHeader.jsx";
+import VideoPlayer from "../components/VideoPlayer.jsx";
 
 export default function WatchPage() {
   const { code } = useParams();
   const session = roomSession(code);
   const [room, setRoom] = useState(null);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [connected, setConnected] = useState(false);
   const [guestName, setGuestName] = useState("");
   const [joining, setJoining] = useState(false);
 
   useEffect(() => {
     setRoom(null);
     setError("");
+    setConnected(false);
     if (!session?.token) return;
     let active = true;
+    let stream;
     api(`/rooms/${encodeURIComponent(code)}`, {}, session.token)
-      .then((data) => { if (active) setRoom(data); })
+      .then((data) => {
+        if (!active) return;
+        setRoom(data);
+        stream = new EventSource(`/api/rooms/${encodeURIComponent(code)}/events?token=${encodeURIComponent(session.token)}`);
+        stream.onmessage = (event) => {
+          if (!active) return;
+          const data = JSON.parse(event.data);
+          if (data.type === "state") { setRoom(data.snapshot); setConnected(true); }
+        };
+        stream.onerror = () => { if (active) setConnected(false); };
+      })
       .catch((err) => { if (active) setError(err.message); });
-    return () => { active = false; };
+    return () => { active = false; stream?.close(); };
   }, [code, session?.token]);
 
   if (!session?.token) return <form className="room-form room-notice" onSubmit={async (event) => {
@@ -39,8 +54,17 @@ export default function WatchPage() {
   if (error) return <div className="room-notice" role="alert">{error} <Link to="/">На главную</Link></div>;
   if (!room) return <div className="room-notice">Загружаем комнату…</div>;
 
+  async function send(path, payload) {
+    try { await api(`/rooms/${encodeURIComponent(code)}/${path}`, { method: "POST", body: JSON.stringify(payload) }, session.token); setActionError(""); return true; }
+    catch (err) { setActionError(err.message); return false; }
+  }
+
   return <>
     <RoomHeader title={room.title} code={room.code} participants={room.participants} />
-    <main className="room-notice">Комната готова. Пригласите друзей по ссылке из шапки.</main>
+    {!connected && <div className="connection-banner">Связь с комнатой прервана. Повторное подключение…</div>}
+    {actionError && <div className="connection-banner" role="alert">{actionError}</div>}
+    <main className="room-layout">
+      <VideoPlayer room={room} onPlayback={(position, playing) => send("playback", { position, playing })} />
+    </main>
   </>;
 }
