@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { api, roomSession } from "../api.js";
 import RoomHeader from "../components/RoomHeader.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
+import ChatPanel from "../components/ChatPanel.jsx";
 
 export default function WatchPage() {
   const { code } = useParams();
@@ -65,6 +66,7 @@ export default function WatchPage() {
     {actionError && <div className="connection-banner" role="alert">{actionError}</div>}
     <main className="room-layout">
       <VideoPlayer room={room} onPlayback={(position, playing) => send("playback", { position, playing })} />
+      <ChatPanel messages={room.messages} onSend={(text) => send("messages", { text })} />
     </main>
   </>;
 }
