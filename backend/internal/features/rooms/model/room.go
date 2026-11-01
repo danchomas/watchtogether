@@ -10,10 +10,11 @@ var (
 )
 
 type Snapshot struct {
-	Code         string `json:"code"`
-	Title        string `json:"title"`
-	VideoURL     string `json:"videoUrl"`
-	Participants int    `json:"participants"`
+	Code         string   `json:"code"`
+	Title        string   `json:"title"`
+	VideoURL     string   `json:"videoUrl"`
+	Participants int      `json:"participants"`
+	Playback     Playback `json:"playback"`
 }
 
 type Room struct {

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+	"time"
 
 	"watchtogether/internal/features/rooms/model"
 )
@@ -14,6 +15,7 @@ type Repository interface {
 	Insert(room model.Room) error
 	Get(code string) (model.Room, error)
 	Update(code string, change func(*model.Room) error) (model.Room, error)
+	Subscribe(code string) (<-chan model.Event, func(), error)
 }
 
 type Service struct{ rooms Repository }
@@ -55,6 +57,7 @@ func (s *Service) Create(title, videoURL, name string) (model.Snapshot, string, 
 			return model.Snapshot{}, "", err
 		}
 		room := model.Room{State: model.Snapshot{Code: normalizeCode(code), Title: title, VideoURL: videoURL, Participants: 1}, Members: map[string]string{token: name}}
+		room.State.Playback = model.Playback{UpdatedAt: time.Now().UTC()}
 		err = s.rooms.Insert(room)
 		if errors.Is(err, model.ErrConflict) {
 			continue

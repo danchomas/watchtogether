@@ -44,6 +44,9 @@ func TestHTTPRoomFlow(t *testing.T) {
 	if joined.Code != http.StatusOK {
 		t.Fatal(joined.Body.String())
 	}
+	if got := request("POST", path+"/playback", `{"position":10,"playing":true}`, result.Token).Code; got != http.StatusNoContent {
+		t.Fatalf("playback: %d", got)
+	}
 	state := request("GET", path, "", result.Token)
 	if state.Code != http.StatusOK {
 		t.Fatal(state.Body.String())
@@ -52,7 +55,7 @@ func TestHTTPRoomFlow(t *testing.T) {
 	if err := json.Unmarshal(state.Body.Bytes(), &room); err != nil {
 		t.Fatal(err)
 	}
-	if room.Participants != 2 {
+	if room.Participants != 2 || !room.Playback.Playing || room.Playback.Position != 10 {
 		t.Fatalf("unexpected state: %+v", room)
 	}
 }

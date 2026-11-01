@@ -7,11 +7,14 @@ import (
 )
 
 type Repository struct {
-	mu    sync.Mutex
-	rooms map[string]model.Room
+	mu        sync.Mutex
+	rooms     map[string]model.Room
+	listeners map[string]map[chan model.Event]struct{}
 }
 
-func New() *Repository { return &Repository{rooms: make(map[string]model.Room)} }
+func New() *Repository {
+	return &Repository{rooms: make(map[string]model.Room), listeners: make(map[string]map[chan model.Event]struct{})}
+}
 
 func (r *Repository) Insert(room model.Room) error {
 	r.mu.Lock()
@@ -46,5 +49,6 @@ func (r *Repository) Update(code string, change func(*model.Room) error) (model.
 		return model.Room{}, err
 	}
 	r.rooms[code] = room.Clone()
+	r.publish(code, room)
 	return room, nil
 }
