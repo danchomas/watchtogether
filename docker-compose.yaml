@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: cmd/server/Dockerfile
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  web:
+    build: ./frontend
+    ports:
+      - "${WATCHROOM_PORT:-8081}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
